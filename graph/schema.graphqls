@@ -7,6 +7,7 @@ type Todo {
   text: String!
   done: Boolean!
   user: User!
+  related(count: Int!): [Todo!]!
 }
 
 type User {
@@ -23,6 +24,12 @@ input NewTodo {
   userId: String!
 }
 
+input Relation {
+  a: String!
+  b: String!
+}
+
 type Mutation {
   createTodo(input: NewTodo!): Todo!
+  addRelated(input: Relation!): Todo!
 }

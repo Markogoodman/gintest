@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math/rand"
 
@@ -20,6 +21,23 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	}
 	r.todos = append(r.todos, todo)
 	return todo, nil
+}
+
+func (r *mutationResolver) AddRelated(ctx context.Context, input model.Relation) (*model.Todo, error) {
+	var a, b *model.Todo
+
+	for _, todo := range r.todos {
+		if todo.ID == input.A {
+			a = todo
+		} else if todo.ID == input.B {
+			b = todo
+		}
+	}
+	if a == nil || b == nil {
+		return nil, errors.New("QQ cant find")
+	}
+	a.Related = append(a.Related, b.ID)
+	return a, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
@@ -40,6 +58,23 @@ func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, 
 		ID:   obj.UserID,
 		Name: obj.UserID + "_name",
 	}, nil
+}
+
+func (r *todoResolver) Related(ctx context.Context, obj *model.Todo, count int) ([]*model.Todo, error) {
+	todos := []*model.Todo{}
+	i := 0
+	for _, rid := range obj.Related {
+		for _, todo := range r.todos {
+			if rid == todo.ID {
+				todos = append(todos, todo)
+				i++
+				if i >= count {
+					break
+				}
+			}
+		}
+	}
+	return todos, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

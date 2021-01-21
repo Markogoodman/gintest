@@ -7,6 +7,11 @@ type NewTodo struct {
 	UserID string `json:"userId"`
 }
 
+type Relation struct {
+	A string `json:"a"`
+	B string `json:"b"`
+}
+
 type User struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
