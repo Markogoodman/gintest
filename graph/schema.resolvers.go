@@ -23,6 +23,15 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+	// fmt.Printf("CollectAllFields: %+v \n\n", graphql.CollectAllFields(ctx))
+	// fmt.Printf("CollectFieldsCtx: \n")
+	// for _, field := range graphql.CollectFieldsCtx(ctx, nil) {
+	// 	fmt.Printf("  %+v\n", field.Name)
+	// 	for _, sel := range field.Selections {
+	// 		fmt.Printf("    %+v\n", sel)
+	// 	}
+	// }
+
 	return r.todos, nil
 }
 
